@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Inventory List System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📦 Product Inventory List System</h1>
+            <p class="subtitle">List, Stack, Queue, Linked Lists (ADTs & Linear DS)</p>
+        </header>
+
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-label">Total Products</div>
+                <div class="stat-value" id="stat-total-products">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Quantity</div>
+                <div class="stat-value" id="stat-total-quantity">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Inventory Value</div>
+                <div class="stat-value" id="stat-total-value">$0.00</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Categories</div>
+                <div class="stat-value" id="stat-categories">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Pending Orders</div>
+                <div class="stat-value" id="stat-pending-orders">0</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="action-section">
+                    <h2>Product Management</h2>
+                    <button class="btn btn-primary" onclick="showAddProductModal()">➕ Add Product</button>
+                    <button class="btn btn-secondary" onclick="loadAllProducts()">📋 View All Products</button>
+                    <button class="btn btn-secondary" onclick="showSearchModal()">🔍 Search Products</button>
+                </div>
+
+                <div class="action-section">
+                    <h2>Orders (Queue)</h2>
+                    <button class="btn btn-primary" onclick="showAddOrderModal()">➕ Add Order</button>
+                    <button class="btn btn-secondary" onclick="processOrder()">⚡ Process Order</button>
+                    <button class="btn btn-secondary" onclick="loadPendingOrders()">📋 Pending Orders</button>
+                </div>
+
+                <div class="action-section">
+                    <h2>Operations (Stack)</h2>
+                    <button class="btn btn-warning" onclick="undoOperation()">↩️ Undo Last Operation</button>
+                    <button class="btn btn-secondary" onclick="loadRecentOperations()">📜 Recent Operations</button>
+                </div>
+
+                <div class="action-section">
+                    <h2>Statistics</h2>
+                    <button class="btn btn-info" onclick="loadStatistics()">📊 View Statistics</button>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div id="message-area"></div>
+                <div id="products-container"></div>
+                <div id="orders-container"></div>
+                <div id="operations-container"></div>
+                <div id="statistics-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="addProductModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addProductModal')">&times;</span>
+            <h2>Add New Product</h2>
+            <form id="addProductForm" onsubmit="addProduct(event)">
+                <div class="form-group">
+                    <label for="productName">Product Name *</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label for="productCategory">Category *</label>
+                    <input type="text" id="productCategory" required>
+                </div>
+                <div class="form-group">
+                    <label for="productPrice">Price ($) *</label>
+                    <input type="number" id="productPrice" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="productQuantity">Quantity *</label>
+                    <input type="number" id="productQuantity" min="0" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="searchModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('searchModal')">&times;</span>
+            <h2>Search Products</h2>
+            <form id="searchForm" onsubmit="searchProducts(event)">
+                <div class="form-group">
+                    <label for="searchName">Product Name</label>
+                    <input type="text" id="searchName" placeholder="Enter product name..." required>
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Order Modal -->
+    <div id="addOrderModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('addOrderModal')">&times;</span>
+            <h2>Add Order to Queue</h2>
+            <form id="addOrderForm" onsubmit="addOrder(event)">
+                <div class="form-group">
+                    <label for="orderProductId">Product ID *</label>
+                    <input type="number" id="orderProductId" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="orderQuantity">Quantity *</label>
+                    <input type="number" id="orderQuantity" min="1" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div id="editProductModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('editProductModal')">&times;</span>
+            <h2>Edit Product</h2>
+            <form id="editProductForm" onsubmit="updateProduct(event)">
+                <input type="hidden" id="editProductId">
+                <div class="form-group">
+                    <label for="editProductName">Product Name</label>
+                    <input type="text" id="editProductName" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="editProductPrice">Price ($) *</label>
+                    <input type="number" id="editProductPrice" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductQuantity">Quantity *</label>
+                    <input type="number" id="editProductQuantity" min="0" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Product</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
+
