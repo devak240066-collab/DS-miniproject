@@ -61,7 +61,7 @@ window.onclick = function(event) {
 // API Functions - Products
 async function loadAllProducts() {
     try {
-        const response = await fetch('/api/products');
+        const response = await fetch('https://ds-miniproject-back-end-3.onrender.com/api/products');
         const data = await response.json();
         
         if (data.success) {
@@ -108,7 +108,7 @@ async function addProduct(event) {
     };
     
     try {
-        const response = await fetch('/api/products', {
+        const response = await fetch('https://ds-miniproject-back-end-3.onrender.com/api/products', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -137,7 +137,7 @@ async function deleteProduct(productId) {
     }
     
     try {
-        const response = await fetch(`/api/products/${productId}`, {
+        const response = await fetch(`https://ds-miniproject-back-end-3.onrender.com/api/products/${productId}`, {
             method: 'DELETE'
         });
         
@@ -164,7 +164,7 @@ async function updateProduct(event) {
     
     try {
         // Update price
-        const priceResponse = await fetch(`/api/products/${productId}/price`, {
+        const priceResponse = await fetch(`https://ds-miniproject-back-end-3.onrender.com/api/products/${productId}/price`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -173,7 +173,7 @@ async function updateProduct(event) {
         });
         
         // Update quantity
-        const quantityResponse = await fetch(`/api/products/${productId}/quantity`, {
+        const quantityResponse = await fetch(`https://ds-miniproject-back-end-3.onrender.com/api/products/${productId}/quantity`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -203,7 +203,7 @@ async function searchProducts(event) {
     const name = document.getElementById('searchName').value;
     
     try {
-        const response = await fetch(`/api/products/search?name=${encodeURIComponent(name)}`);
+        const response = await fetch(`https://ds-miniproject-back-end-3.onrender.com/api/products/search?name=${encodeURIComponent(name)}`);
         const data = await response.json();
         
         if (data.success) {
@@ -230,7 +230,7 @@ async function addOrder(event) {
     };
     
     try {
-        const response = await fetch('/api/orders', {
+        const response = await fetch('https://ds-miniproject-back-end-3.onrender.com/api/orders', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -255,7 +255,7 @@ async function addOrder(event) {
 
 async function processOrder() {
     try {
-        const response = await fetch('/api/orders/process', {
+        const response = await fetch('https://ds-miniproject-back-end-3.onrender.com/api/orders/process', {
             method: 'POST'
         });
         
@@ -276,7 +276,7 @@ async function processOrder() {
 
 async function loadPendingOrders() {
     try {
-        const response = await fetch('/api/orders');
+        const response = await fetch('https://ds-miniproject-back-end-3.onrender.com/api/orders');
         const data = await response.json();
         
         if (data.success) {
@@ -309,7 +309,7 @@ function displayOrders(orders) {
 // API Functions - Operations
 async function undoOperation() {
     try {
-        const response = await fetch('/api/operations/undo', {
+        const response = await fetch('https://ds-miniproject-back-end-3.onrender.com/api/operations/undo', {
             method: 'POST'
         });
         
@@ -330,7 +330,7 @@ async function undoOperation() {
 
 async function loadRecentOperations() {
     try {
-        const response = await fetch('/api/operations/recent?n=10');
+        const response = await fetch('https://ds-miniproject-back-end-3.onrender.com/api/operations/recent?n=10');
         const data = await response.json();
         
         if (data.success) {
@@ -361,7 +361,7 @@ function displayOperations(operations) {
 // API Functions - Statistics
 async function loadStatistics() {
     try {
-        const response = await fetch('/api/statistics');
+        const response = await fetch('https://ds-miniproject-back-end-3.onrender.com/api/statistics');
         const data = await response.json();
         
         if (data.success) {
@@ -426,4 +426,5 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
+
 
